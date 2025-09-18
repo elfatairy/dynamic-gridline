@@ -1,12 +1,12 @@
 import styles from '~/styles/Grid.module.css'
-import { Slider, SliderProps } from '~/components/Slider'
+import { Slider } from '~/components/Slider'
 import { useGrid } from '~/hooks/useGrid'
 import { RefObject } from 'react'
-import { Fragment, useImperativeHandle, useMemo } from 'react'
+import { useImperativeHandle, useMemo } from 'react'
 import { motion, useTransform } from 'motion/react'
 import { GridContext } from '~/contexts/GridContext'
 import { GridConfig, mergeWithDefaultConfig } from '~/configs/gridConfig'
-import { GridPattern } from '~/components/GridPattern'
+import { Gridlines } from '~/components/Gridlines'
 
 export interface GridRef {
   focusGrid: () => void
@@ -18,13 +18,12 @@ interface GridProps {
   config?: Partial<GridConfig>
 }
 
-
 export function Grid({
   children = null,
   ref = undefined,
-  config,
+  config: configProps,
 }: GridProps) {
-  const mergedConfig = useMemo(() => mergeWithDefaultConfig(config), [config])
+  const config = useMemo(() => mergeWithDefaultConfig(configProps), [configProps])
 
   const {
     zoomDisplayValue,
@@ -41,7 +40,7 @@ export function Grid({
     handleTouchStart,
     handleTouchMove,
     handleTouchEnd
-  } = useGrid(mergedConfig)
+  } = useGrid(config)
 
   useImperativeHandle(ref, () => ({
     focusGrid: () => {
@@ -49,7 +48,7 @@ export function Grid({
     }
   }))
 
-  const { width, height, gridCellSize, minZoom, maxZoom, disabled, customZoomSlider } = mergedConfig
+  const { width, height, gridCellSize, minZoom, maxZoom, disabled, customZoomSlider } = config
 
   const scaledWidth = useTransform(zoom, (_zoom) => width * _zoom)
   const scaledHeight = useTransform(zoom, (_zoom) => height * _zoom)
@@ -81,26 +80,9 @@ export function Grid({
         onTouchCancel={disabled ? undefined : handleTouchEnd}
       >
         <svg className={styles.gridSvg}>
-          <defs>
-            {
-              Array.from({ length: gridLevels }).map((_, index) => {
-                return (
-                  <Fragment key={index}>
-                    <GridPattern zoom={zoom} cellSize={gridCellSize} index={index} />
-                  </Fragment>
-                )
-              }
-              )
-            }
-          </defs>
-          {
-            Array.from({ length: gridLevels }).map((_, index) => {
-              return (
-                <rect key={index} width='100%' height='100%' fill={`url(#dynamic-grid-pattern-${index})`} />
-              )
-            })
-          }
+          <Gridlines gridLevels={gridLevels} zoom={zoom} gridCellSize={gridCellSize} />
         </svg>
+
         {
           children && (
             <GridContext value={{ width: scaledWidth, height: scaledHeight, x, y, zoom }}>

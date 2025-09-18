@@ -92,7 +92,7 @@ export const useGrid = (config: GridConfig) => {
   // Zoom handlers
   const handleZoom = useCallback(
     (newZoom: number) => {
-      newZoom = Math.max(minZoom, Math.min(maxZoom, newZoom))
+      newZoom = Math.max(minZoom, Math.min(maxZoom, Number(newZoom.toFixed(2))))
       setZoom(newZoom)
     },
     [minZoom, maxZoom, setZoom]
