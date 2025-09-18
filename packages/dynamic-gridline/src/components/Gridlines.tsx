@@ -1,8 +1,11 @@
 import { Fragment } from "react/jsx-runtime"
 import { GridPattern } from "./GridPattern"
 import { MotionValue } from "motion/react"
+import { useMemo } from "react"
 
-export function Gridlines({ gridLevels, zoom, gridCellSize }: { gridLevels: number, zoom: MotionValue<number>, gridCellSize: number }) {
+export function Gridlines({ width, zoom, gridCellSize }: { width: number, zoom: MotionValue<number>, gridCellSize: number }) {
+  const gridLevels = useMemo(() => Math.ceil(Math.log10(width / gridCellSize)), [width, gridCellSize])
+
   return (
     <>
       <defs>

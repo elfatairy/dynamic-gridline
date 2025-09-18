@@ -25,3 +25,11 @@ export function throttle<T extends (...args: Parameters<T>) => void>(
     }
   }
 }
+
+export function getElementSize(element: HTMLElement | null) {
+  const rect = element?.getBoundingClientRect()
+  if (!rect) {
+    return { width: 0, height: 0 }
+  }
+  return rect
+}

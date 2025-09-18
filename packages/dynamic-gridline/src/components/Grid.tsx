@@ -1,12 +1,13 @@
 import styles from '~/styles/Grid.module.css'
 import { Slider } from '~/components/Slider'
 import { useGrid } from '~/hooks/useGrid'
-import { RefObject } from 'react'
+import { RefObject, useRef } from 'react'
 import { useImperativeHandle, useMemo } from 'react'
-import { motion, useTransform } from 'motion/react'
+import { motion } from 'motion/react'
 import { GridContext } from '~/contexts/GridContext'
 import { GridConfig, mergeWithDefaultConfig } from '~/configs/gridConfig'
 import { Gridlines } from '~/components/Gridlines'
+import { useGridEventHandlers } from '~/hooks/useGridEventHandlers'
 
 export interface GridRef {
   focusGrid: () => void
@@ -23,24 +24,19 @@ export function Grid({
   ref = undefined,
   config: configProps,
 }: GridProps) {
+  const containerRef = useRef<HTMLDivElement>(null)
   const config = useMemo(() => mergeWithDefaultConfig(configProps), [configProps])
 
   const {
     zoomDisplayValue,
     x,
     y,
-    containerRef,
     zoom,
-    handleWheel,
-    handleMouseDown,
-    handleMouseMove,
-    handleMouseUp,
-    handleZoom,
-    handleKeyDown,
-    handleTouchStart,
-    handleTouchMove,
-    handleTouchEnd
-  } = useGrid(config)
+    setZoomDisplayValue,
+    scaledWidth,
+    scaledHeight
+  } = useGrid(containerRef, config)
+  const eventHandlers = useGridEventHandlers({ config, containerRef, zoom, width: config.width, height: config.height, x, y, setZoomDisplayValue })
 
   useImperativeHandle(ref, () => ({
     focusGrid: () => {
@@ -48,18 +44,18 @@ export function Grid({
     }
   }))
 
-  const { width, height, gridCellSize, minZoom, maxZoom, disabled, customZoomSlider } = config
-
-  const scaledWidth = useTransform(zoom, (_zoom) => width * _zoom)
-  const scaledHeight = useTransform(zoom, (_zoom) => height * _zoom)
-
-  const gridLevels = useMemo(() => Math.ceil(Math.log10(width / gridCellSize)), [width, gridCellSize])
+  const zoomSliderConfig = useMemo(() => ({
+    minZoom: config.minZoom,
+    maxZoom: config.maxZoom,
+    zoomValue: zoomDisplayValue,
+    handleZoom: eventHandlers.handleZoom
+  }), [config.minZoom, config.maxZoom, zoomDisplayValue, eventHandlers.handleZoom])
 
   return (
     <div className={styles.gridContainer} ref={containerRef}>
       <motion.div
         style={{
-          cursor: disabled ? 'auto' : 'grab',
+          cursor: config.disabled ? 'auto' : 'grab',
           x,
           y,
           width: scaledWidth,
@@ -68,19 +64,10 @@ export function Grid({
         animate={{
           transition: { duration: 0.01 }
         }}
-        onWheel={disabled ? undefined : handleWheel}
-        onMouseDown={disabled ? undefined : handleMouseDown}
-        onMouseMove={disabled ? undefined : handleMouseMove}
-        onMouseUp={disabled ? undefined : handleMouseUp}
-        onMouseLeave={disabled ? undefined : handleMouseUp}
-        onKeyDown={disabled ? undefined : handleKeyDown}
-        onTouchStart={disabled ? undefined : handleTouchStart}
-        onTouchMove={disabled ? undefined : handleTouchMove}
-        onTouchEnd={disabled ? undefined : handleTouchEnd}
-        onTouchCancel={disabled ? undefined : handleTouchEnd}
+        {...eventHandlers}
       >
         <svg className={styles.gridSvg}>
-          <Gridlines gridLevels={gridLevels} zoom={zoom} gridCellSize={gridCellSize} />
+          <Gridlines width={config.width} zoom={zoom} gridCellSize={config.gridCellSize} />
         </svg>
 
         {
@@ -94,9 +81,12 @@ export function Grid({
         }
       </motion.div>
 
-      {customZoomSlider ? customZoomSlider({ minZoom, maxZoom, zoomValue: zoomDisplayValue, handleZoom }) : (
-        <Slider minZoom={minZoom} maxZoom={maxZoom} zoomValue={zoomDisplayValue} handleZoom={handleZoom} />
-      )}
+      {
+        config.customZoomSlider ?
+          config.customZoomSlider(zoomSliderConfig) : (
+            <Slider {...zoomSliderConfig} />
+          )
+      }
     </div>
   )
 }
