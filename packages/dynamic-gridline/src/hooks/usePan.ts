@@ -1,6 +1,6 @@
-import { getElementSize } from "~/utils/utils";
-import { useCallback } from "react";
-import { MotionValue } from "motion/dist/react";
+import { getElementSize } from '~/utils/utils'
+import { useCallback } from 'react'
+import { MotionValue } from 'motion/dist/react'
 
 export interface UsePanProps {
   containerRef: React.RefObject<HTMLDivElement>
@@ -19,14 +19,14 @@ export const usePan = ({ containerRef, x, y, width, height, zoom }: UsePanProps)
       x.set(Math.max(Math.min(0, newPosition.x), viewPort.width - width * zoom.get()))
       y.set(Math.max(Math.min(0, newPosition.y), viewPort.height - height * zoom.get()))
     },
-    [containerRef, x, width, zoom, y, height]
+    [containerRef, x, width, zoom, y, height],
   )
 
   const movePan = useCallback(
     (distance: { x?: number; y?: number }) => {
       setPan({ x: x.get() + (distance.x ?? 0), y: y.get() + (distance.y ?? 0) })
     },
-    [setPan, x, y]
+    [setPan, x, y],
   )
 
   const resetPan = useCallback(() => {
@@ -40,6 +40,6 @@ export const usePan = ({ containerRef, x, y, width, height, zoom }: UsePanProps)
   return {
     setPan,
     movePan,
-    resetPan
+    resetPan,
   }
 }

@@ -1,6 +1,6 @@
-import { MotionValue } from "motion/dist/react"
-import { useCallback } from "react"
-import { getElementSize } from "~/utils/utils"
+import { MotionValue } from 'motion/dist/react'
+import { useCallback } from 'react'
+import { getElementSize } from '~/utils/utils'
 
 interface UseZoomProps {
   containerRef: React.RefObject<HTMLDivElement>
@@ -14,7 +14,17 @@ interface UseZoomProps {
   setZoomDisplayValue: (newZoom: number) => void
 }
 
-export const useZoom = ({ containerRef, x, y, width, height, zoom, minZoom, maxZoom, setZoomDisplayValue }: UseZoomProps) => {
+export const useZoom = ({
+  containerRef,
+  x,
+  y,
+  width,
+  height,
+  zoom,
+  minZoom,
+  maxZoom,
+  setZoomDisplayValue,
+}: UseZoomProps) => {
   const setZoom = useCallback(
     (newZoom: number) => {
       const { width: rectWidth, height: rectHeight } = getElementSize(containerRef.current)
@@ -29,10 +39,10 @@ export const useZoom = ({ containerRef, x, y, width, height, zoom, minZoom, maxZ
       zoom.set(newZoom)
       setZoomDisplayValue(newZoom)
     },
-    [zoom, setZoomDisplayValue, containerRef, minZoom, maxZoom, width, height, x, y]
+    [zoom, setZoomDisplayValue, containerRef, minZoom, maxZoom, width, height, x, y],
   )
 
   return {
-    setZoom
+    setZoom,
   }
 }

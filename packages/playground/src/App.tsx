@@ -2,7 +2,15 @@ import { Grid, GridItem } from 'dynamic-gridline'
 
 function App() {
   return (
-    <div style={{ width: '100vw', height: '100vh', display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
+    <div
+      style={{
+        width: '100vw',
+        height: '100vh',
+        display: 'flex',
+        justifyContent: 'center',
+        alignItems: 'center',
+      }}
+    >
       <div style={{ width: '500px', height: '500px', border: '2px solid black' }}>
         <Grid
           config={{
@@ -14,7 +22,7 @@ function App() {
                 {zoomValue}
                 <button onClick={() => handleZoom(zoomValue - 0.1)}>Zoom out</button>
               </div>
-            )
+            ),
           }}
         >
           <GridItem x={0} y={0}>

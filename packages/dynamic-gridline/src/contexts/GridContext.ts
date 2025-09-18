@@ -1,5 +1,5 @@
-import { MotionValue } from "motion/dist/react"
-import { createContext, use } from "react"
+import { MotionValue } from 'motion/dist/react'
+import { createContext, use } from 'react'
 
 export const GridContext = createContext<{
   width: MotionValue<number>

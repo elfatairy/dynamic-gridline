@@ -19,37 +19,40 @@ interface GridProps {
   config?: Partial<GridConfig>
 }
 
-export function Grid({
-  children = null,
-  ref = undefined,
-  config: configProps,
-}: GridProps) {
+export function Grid({ children = null, ref = undefined, config: configProps }: GridProps) {
   const containerRef = useRef<HTMLDivElement>(null)
   const config = useMemo(() => mergeWithDefaultConfig(configProps), [configProps])
 
-  const {
-    zoomDisplayValue,
+  const { zoomDisplayValue, x, y, zoom, setZoomDisplayValue, scaledWidth, scaledHeight } = useGrid(
+    containerRef,
+    config,
+  )
+  const eventHandlers = useGridEventHandlers({
+    config,
+    containerRef,
+    zoom,
+    width: config.width,
+    height: config.height,
     x,
     y,
-    zoom,
     setZoomDisplayValue,
-    scaledWidth,
-    scaledHeight
-  } = useGrid(containerRef, config)
-  const eventHandlers = useGridEventHandlers({ config, containerRef, zoom, width: config.width, height: config.height, x, y, setZoomDisplayValue })
+  })
 
   useImperativeHandle(ref, () => ({
     focusGrid: () => {
       containerRef.current?.focus()
-    }
+    },
   }))
 
-  const zoomSliderConfig = useMemo(() => ({
-    minZoom: config.minZoom,
-    maxZoom: config.maxZoom,
-    zoomValue: zoomDisplayValue,
-    handleZoom: eventHandlers.handleZoom
-  }), [config.minZoom, config.maxZoom, zoomDisplayValue, eventHandlers.handleZoom])
+  const zoomSliderConfig = useMemo(
+    () => ({
+      minZoom: config.minZoom,
+      maxZoom: config.maxZoom,
+      zoomValue: zoomDisplayValue,
+      handleZoom: eventHandlers.handleZoom,
+    }),
+    [config.minZoom, config.maxZoom, zoomDisplayValue, eventHandlers.handleZoom],
+  )
 
   return (
     <div className={styles.gridContainer} ref={containerRef}>
@@ -59,10 +62,10 @@ export function Grid({
           x,
           y,
           width: scaledWidth,
-          height: scaledHeight
+          height: scaledHeight,
         }}
         animate={{
-          transition: { duration: 0.01 }
+          transition: { duration: 0.01 },
         }}
         {...eventHandlers}
       >
@@ -70,23 +73,18 @@ export function Grid({
           <Gridlines width={config.width} zoom={zoom} gridCellSize={config.gridCellSize} />
         </svg>
 
-        {
-          children && (
-            <GridContext value={{ width: scaledWidth, height: scaledHeight, x, y, zoom }}>
-              <div className={styles.gridContent}>
-                {children}
-              </div>
-            </GridContext>
-          )
-        }
+        {children && (
+          <GridContext value={{ width: scaledWidth, height: scaledHeight, x, y, zoom }}>
+            <div className={styles.gridContent}>{children}</div>
+          </GridContext>
+        )}
       </motion.div>
 
-      {
-        config.customZoomSlider ?
-          config.customZoomSlider(zoomSliderConfig) : (
-            <Slider {...zoomSliderConfig} />
-          )
-      }
+      {config.customZoomSlider ? (
+        config.customZoomSlider(zoomSliderConfig)
+      ) : (
+        <Slider {...zoomSliderConfig} />
+      )}
     </div>
   )
 }

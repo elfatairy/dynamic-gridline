@@ -1,4 +1,4 @@
-import { Slider, SliderProps } from "~/components/Slider"
+import { Slider, SliderProps } from '~/components/Slider'
 
 export type GridConfig = {
   width: number
@@ -20,7 +20,7 @@ export const DEFAULT_GRID_CONFIG: GridConfig = {
   minZoom: 0.1,
   maxZoom: 1,
   disabled: false,
-  customZoomSlider: null
+  customZoomSlider: null,
 }
 
 export const mergeWithDefaultConfig = (userConfig?: Partial<GridConfig>): GridConfig => {

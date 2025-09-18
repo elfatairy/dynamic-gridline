@@ -8,16 +8,15 @@ export const useGrid = (containerRef: React.RefObject<HTMLDivElement>, config: G
   const x = useMotionValue(0)
   const y = useMotionValue(0)
   const zoom = useMotionValue(1)
-  
+
   const scaledWidth = useTransform(zoom, (_zoom) => width * _zoom)
   const scaledHeight = useTransform(zoom, (_zoom) => height * _zoom)
-  
+
   const [zoomDisplayValue, setZoomDisplayValue] = useState(1)
   const zoomDisplayValueDeferred = useDeferredValue(zoomDisplayValue)
 
-
   const { resetPan } = usePan({ containerRef, x, y, width, height, zoom })
-  
+
   useLayoutEffect(() => {
     resetPan()
   }, [resetPan])
@@ -29,6 +28,6 @@ export const useGrid = (containerRef: React.RefObject<HTMLDivElement>, config: G
     x,
     y,
     scaledWidth,
-    scaledHeight
+    scaledHeight,
   }
 }

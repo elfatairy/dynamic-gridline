@@ -11,10 +11,19 @@ interface GridItemProps {
   fixedZIndex?: number
 }
 
-export const GridItem = ({ children, x, y, disableScale = false, fixedZIndex = undefined }: GridItemProps) => {
+export const GridItem = ({
+  children,
+  x,
+  y,
+  disableScale = false,
+  fixedZIndex = undefined,
+}: GridItemProps) => {
   const { width, height, zoom } = useGridContentContext()
   const itemRef = useRef<HTMLDivElement>(null)
-  const [itemSize, setItemSize] = useState<{ width: number, height: number }>({ width: 0, height: 0 })
+  const [itemSize, setItemSize] = useState<{ width: number; height: number }>({
+    width: 0,
+    height: 0,
+  })
 
   useLayoutEffect(() => {
     if (itemRef.current) {
@@ -22,8 +31,14 @@ export const GridItem = ({ children, x, y, disableScale = false, fixedZIndex = u
     }
   }, [])
 
-  const translateX = useTransform(width, (_width) => _width / 2 + x * zoom.get() - itemSize.width / 2)
-  const translateY = useTransform(height, (_height) => _height / 2 + y * zoom.get() - itemSize.height / 2)
+  const translateX = useTransform(
+    width,
+    (_width) => _width / 2 + x * zoom.get() - itemSize.width / 2,
+  )
+  const translateY = useTransform(
+    height,
+    (_height) => _height / 2 + y * zoom.get() - itemSize.height / 2,
+  )
 
   return (
     <motion.div
@@ -33,7 +48,7 @@ export const GridItem = ({ children, x, y, disableScale = false, fixedZIndex = u
         x: translateX,
         y: translateY,
         scale: disableScale ? 1 : zoom,
-        zIndex: fixedZIndex
+        zIndex: fixedZIndex,
       }}
     >
       {children}

@@ -1,6 +1,6 @@
 export function throttle<T extends (...args: Parameters<T>) => void>(
   func: T,
-  delay: number
+  delay: number,
 ): (...args: Parameters<T>) => void {
   let timeoutId: ReturnType<typeof setTimeout> | null = null
   let lastExecTime = 0
@@ -20,7 +20,7 @@ export function throttle<T extends (...args: Parameters<T>) => void>(
           func(...args)
           lastExecTime = Date.now()
         },
-        delay - (currentTime - lastExecTime)
+        delay - (currentTime - lastExecTime),
       )
     }
   }

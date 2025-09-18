@@ -1,10 +1,10 @@
-import { useCallback, useMemo, useRef, useState } from "react"
-import { getElementSize, throttle } from "../utils/utils"
-import { GridConfig } from "~/configs/gridConfig"
-import { THROTTLE_TIME } from "~/constants/grid"
-import { MotionValue } from "motion/dist/react"
-import { usePan } from "./usePan"
-import { useZoom } from "./useZoom"
+import { useCallback, useMemo, useRef, useState } from 'react'
+import { getElementSize, throttle } from '../utils/utils'
+import { GridConfig } from '~/configs/gridConfig'
+import { THROTTLE_TIME } from '~/constants/grid'
+import { MotionValue } from 'motion/dist/react'
+import { usePan } from './usePan'
+import { useZoom } from './useZoom'
 
 export interface GridEventHandlersProps {
   config: GridConfig
@@ -26,15 +26,26 @@ export const useGridEventHandlers = (props: GridEventHandlersProps) => {
   const [dragStart, setDragStart] = useState({ x: 0, y: 0 })
   const holdingTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null)
   const fastClickTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null)
+
   const { setPan, movePan } = usePan({ containerRef, x, y, width, height, zoom })
-  const { setZoom } = useZoom({ containerRef, x, y, width, height, zoom, minZoom, maxZoom, setZoomDisplayValue })
+  const { setZoom } = useZoom({
+    containerRef,
+    x,
+    y,
+    width,
+    height,
+    zoom,
+    minZoom,
+    maxZoom,
+    setZoomDisplayValue,
+  })
 
   const handleZoom = useCallback(
     (newZoom: number) => {
       newZoom = Math.max(minZoom, Math.min(maxZoom, Number(newZoom.toFixed(2))))
       setZoom(newZoom)
     },
-    [minZoom, maxZoom, setZoom]
+    [minZoom, maxZoom, setZoom],
   )
 
   // Mouse wheel zoom
@@ -50,7 +61,7 @@ export const useGridEventHandlers = (props: GridEventHandlersProps) => {
 
         handleZoom(delta * zoom.get())
       }, THROTTLE_TIME),
-    [handleZoom, zoom]
+    [handleZoom, zoom],
   )
 
   const handleStartHolding = useCallback(
@@ -66,11 +77,11 @@ export const useGridEventHandlers = (props: GridEventHandlersProps) => {
 
           const pos = {
             x: position.x / zoom.get() - width / 2,
-            y: position.y / zoom.get() - height / 2
+            y: position.y / zoom.get() - height / 2,
           }
           onHoldClick({
             x: pos.x,
-            y: pos.y
+            y: pos.y,
           })
         }, 300)
       }
@@ -79,11 +90,14 @@ export const useGridEventHandlers = (props: GridEventHandlersProps) => {
           if (!isHoldingRef.current) {
             return
           }
-          onFastClick({ x: position.x - (width * zoom.get()) / 2, y: position.y - (height * zoom.get()) / 2 })
+          onFastClick({
+            x: position.x - (width * zoom.get()) / 2,
+            y: position.y - (height * zoom.get()) / 2,
+          })
         }, 100)
       }
     },
-    [onHoldClick, onFastClick, width, zoom, height]
+    [onHoldClick, onFastClick, width, zoom, height],
   )
 
   const handleMoving = useCallback(
@@ -97,18 +111,18 @@ export const useGridEventHandlers = (props: GridEventHandlersProps) => {
         }
         setPan({
           x: position.x - dragStart.x,
-          y: position.y - dragStart.y
+          y: position.y - dragStart.y,
         })
       }
       const viewPort = getElementSize(containerRef.current)
       if (onMouseMove && !isTouch) {
         onMouseMove({
           x: (position.x - viewPort.width / 2) / zoom.get(),
-          y: (position.y - viewPort.height / 2) / zoom.get()
+          y: (position.y - viewPort.height / 2) / zoom.get(),
         })
       }
     },
-    [isHolding, containerRef, onMouseMove, setPan, dragStart.x, dragStart.y, zoom]
+    [isHolding, containerRef, onMouseMove, setPan, dragStart.x, dragStart.y, zoom],
   )
 
   const handleEndHolding = useCallback(() => {
@@ -128,14 +142,14 @@ export const useGridEventHandlers = (props: GridEventHandlersProps) => {
         handleStartHolding({ x: e.clientX - x.get(), y: e.clientY - y.get() })
       }
     },
-    [handleStartHolding, x, y]
+    [handleStartHolding, x, y],
   )
 
   const handleTouchStart = useCallback(
     (e: React.TouchEvent) => {
       handleStartHolding({ x: e.touches[0].clientX - x.get(), y: e.touches[0].clientY - y.get() })
     },
-    [handleStartHolding, x, y]
+    [handleStartHolding, x, y],
   )
 
   const handleMouseMove = useCallback(
@@ -143,10 +157,10 @@ export const useGridEventHandlers = (props: GridEventHandlersProps) => {
       e.preventDefault()
       handleMoving({
         x: e.clientX,
-        y: e.clientY
+        y: e.clientY,
       })
     },
-    [handleMoving]
+    [handleMoving],
   )
 
   const handleTouchMove = useCallback(
@@ -154,12 +168,12 @@ export const useGridEventHandlers = (props: GridEventHandlersProps) => {
       handleMoving(
         {
           x: e.touches[0].clientX,
-          y: e.touches[0].clientY
+          y: e.touches[0].clientY,
         },
-        true
+        true,
       )
     },
-    [handleMoving]
+    [handleMoving],
   )
 
   const handleMouseUp = useCallback(() => {
@@ -186,20 +200,20 @@ export const useGridEventHandlers = (props: GridEventHandlersProps) => {
         movePan({ x: -10 })
       }
     },
-    [movePan]
+    [movePan],
   )
 
-    return {
-      onWheel: config.disabled ? undefined : handleWheel,
-      onMouseDown: config.disabled ? undefined : handleMouseDown,
-      onMouseMove: config.disabled ? undefined : handleMouseMove,
-      onMouseUp: config.disabled ? undefined : handleMouseUp,
-      onMouseLeave: config.disabled ? undefined : handleMouseUp,
-      onKeyDown: config.disabled ? undefined : handleKeyDown,
-      onTouchStart: config.disabled ? undefined : handleTouchStart,
-      onTouchMove: config.disabled ? undefined : handleTouchMove,
-      onTouchEnd: config.disabled ? undefined : handleTouchEnd,
-      onTouchCancel: config.disabled ? undefined : handleTouchEnd,
-      handleZoom: config.disabled ? undefined : handleZoom
-    }
+  return {
+    onWheel: config.disabled ? undefined : handleWheel,
+    onMouseDown: config.disabled ? undefined : handleMouseDown,
+    onMouseMove: config.disabled ? undefined : handleMouseMove,
+    onMouseUp: config.disabled ? undefined : handleMouseUp,
+    onMouseLeave: config.disabled ? undefined : handleMouseUp,
+    onKeyDown: config.disabled ? undefined : handleKeyDown,
+    onTouchStart: config.disabled ? undefined : handleTouchStart,
+    onTouchMove: config.disabled ? undefined : handleTouchMove,
+    onTouchEnd: config.disabled ? undefined : handleTouchEnd,
+    onTouchCancel: config.disabled ? undefined : handleTouchEnd,
+    handleZoom: config.disabled ? undefined : handleZoom,
+  }
 }

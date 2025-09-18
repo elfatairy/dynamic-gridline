@@ -11,13 +11,8 @@ export default function Slider({
   ...props
 }: React.ComponentProps<typeof SliderPrimitive.Root>) {
   const _values = React.useMemo(
-    () =>
-      Array.isArray(value)
-        ? value
-        : Array.isArray(defaultValue)
-          ? defaultValue
-          : [min, max],
-    [value, defaultValue, min, max]
+    () => (Array.isArray(value) ? value : Array.isArray(defaultValue) ? defaultValue : [min, max]),
+    [value, defaultValue, min, max],
   )
 
   return (
@@ -30,14 +25,8 @@ export default function Slider({
       className={`${styles.slider} ${className || ''}`}
       {...props}
     >
-      <SliderPrimitive.Track
-        data-slot="slider-track"
-        className={styles.sliderTrack}
-      >
-        <SliderPrimitive.Range
-          data-slot="slider-range"
-          className={styles.sliderRange}
-        />
+      <SliderPrimitive.Track data-slot="slider-track" className={styles.sliderTrack}>
+        <SliderPrimitive.Range data-slot="slider-range" className={styles.sliderRange} />
       </SliderPrimitive.Track>
       {Array.from({ length: _values.length }, (_, index) => (
         <SliderPrimitive.Thumb
