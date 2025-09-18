@@ -1,6 +1,6 @@
-import { Slider as SliderPrimitive } from '@radix-ui/react-slider'
 import { motion } from 'motion/react'
 import styles from '~/styles/Slider.module.css'
+import { Slider as SliderPrimitive } from './ui/slider'
 
 export interface SliderProps {
   minZoom: number
@@ -13,11 +13,11 @@ export const Slider = ({ minZoom, maxZoom, zoomValue, handleZoom }: SliderProps)
   return (
     <div className={styles.zoomControls}>
       <SliderPrimitive
-        min={minZoom}
-        max={maxZoom}
-        value={[zoomValue]}
+        min={Math.log10(minZoom)}
+        max={Math.log10(maxZoom)}
+        value={[Math.log10(zoomValue)]}
         step={0.1}
-        onValueChange={(values) => handleZoom(values[0])}
+        onValueChange={(values) => handleZoom(10 ** values[0])}
         className={styles.zoomSlider}
         aria-label="Zoom level slider"
       />
