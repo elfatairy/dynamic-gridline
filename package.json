@@ -1,0 +1,11 @@
+{
+  "name": "dynamic-gridline-monorepo",
+  "private": false,
+  "scripts": {
+    "build": "cd packages/dynamic-gridline && pnpm build",
+    "link": "cd packages/dynamic-gridline && pnpm link",
+    "playground": "cd packages/playground && pnpm dev"
+  },
+  "module": "index.ts",
+  "type": "module"
+}

@@ -1,0 +1,12 @@
+.gridItem {
+  position: absolute;
+  z-index: 10;
+}
+
+.gridItem:hover {
+  z-index: 21;
+}
+
+.gridItem:focus-within {
+  z-index: 20;
+}
