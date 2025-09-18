@@ -3,35 +3,46 @@ import { motion, MotionValue, useTransform } from 'motion/react'
 interface GridPatternProps {
   zoom: MotionValue<number>
   cellSize: number
-  index: number
+  level: number
   gridColor: string
 }
 
 export const GridPattern = ({
   zoom,
   cellSize,
-  index,
+  level,
   gridColor,
 }: GridPatternProps) => {
-  const scaledCellSize = useTransform(zoom, (_zoom) => cellSize * 10 ** index * _zoom)
-  const scaledStrokeWidth = useTransform(zoom, [0.1 ** index, 0.1 ** (index + 1)], [1, 0.1])
+  const scaledCellSize = useTransform(zoom, (_zoom) => cellSize * _zoom)
+  const scaledStrokeWidth = useTransform(zoom, [0.1 ** (level - 1), 0.1 ** level, 0.1 ** (level + 1)], [0, 1, 0])
 
   return (
     <motion.pattern
-      key={index}
-      id={`dynamic-grid-pattern-${index}`}
+      key={level}
+      id={`dynamic-grid-pattern-${level}`}
       style={{
         width: scaledCellSize,
         height: scaledCellSize,
       }}
       patternUnits="userSpaceOnUse"
     >
-      <motion.path
-        d={`M ${cellSize * 10 ** index} 0 L 0 0 0 ${cellSize * 10 ** index}`}
+      <motion.line
+        x1={0}
+        y1={0}
+        x2={0}
+        y2={scaledCellSize}
         fill="none"
         stroke={gridColor}
         strokeWidth={scaledStrokeWidth}
-        opacity={0.5}
+      />
+      <motion.line
+        x1={0}
+        y1={0}
+        x2={scaledCellSize}
+        y2={0}
+        fill="none"
+        stroke={gridColor}
+        strokeWidth={scaledStrokeWidth}
       />
     </motion.pattern>
   )

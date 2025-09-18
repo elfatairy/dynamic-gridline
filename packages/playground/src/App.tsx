@@ -25,16 +25,16 @@ function App() {
             gridColor: '#C9DAEA',
             gridBackground: '#191516',
             minZoom: 0.01,
-            maxZoom: 10,
-            zoomSteps: 3,
+            maxZoom: 100,
+            zoomSteps: 100,
           }}
         >
-          <GridItem x={0} y={0}>
+          {/* <GridItem x={0} y={0}>
             <div style={{ width: 100, height: 100, backgroundColor: 'red' }} />
           </GridItem>
           <GridItem x={200} y={0} disableScale>
             <div style={{ width: 100, height: 100, backgroundColor: 'blue', borderRadius: '50%' }} />
-          </GridItem>
+          </GridItem> */}
         </Grid>
       </div>
     </div>

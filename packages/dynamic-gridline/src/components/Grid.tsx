@@ -77,7 +77,7 @@ export function Grid({ children = null, ref = undefined, config: configProps }: 
         {...eventHandlers}
       >
         <svg className={styles.gridSvg}>
-          <Gridlines width={config.width} zoom={zoom} gridCellSize={config.gridCellSize} gridColor={config.gridColor} />
+          <Gridlines maxZoom={config.maxZoom} minZoom={config.minZoom} zoom={zoom} gridCellSize={config.gridCellSize} gridColor={config.gridColor} />
         </svg>
 
         {children && (
