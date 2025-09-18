@@ -19,7 +19,7 @@ export interface GridEventHandlersProps {
 
 export const useGridEventHandlers = (props: GridEventHandlersProps) => {
   const { config, containerRef, zoom, width, height, x, y, setZoomDisplayValue } = props
-  const { minZoom, maxZoom, onHoldClick, onFastClick, onMouseMove } = config
+  const { minZoom, maxZoom, panStep, onHoldClick, onFastClick, onMouseMove } = config
 
   const isHolding = useRef(false)
   const dragStart = useRef({ x: 0, y: 0 })
@@ -93,12 +93,9 @@ export const useGridEventHandlers = (props: GridEventHandlersProps) => {
   const handleMoving = useCallback(
     (position: { x: number; y: number }, isTouch: boolean = false) => {
       if (isHolding.current) {
-        if (holdingTimeoutRef.current) {
-          clearTimeout(holdingTimeoutRef.current)
-        }
-        if (fastClickTimeoutRef.current) {
-          clearTimeout(fastClickTimeoutRef.current)
-        }
+        if (holdingTimeoutRef.current) clearTimeout(holdingTimeoutRef.current)
+        if (fastClickTimeoutRef.current) clearTimeout(fastClickTimeoutRef.current)
+
         setPan({
           x: position.x - dragStart.current.x,
           y: position.y - dragStart.current.y,
@@ -129,6 +126,7 @@ export const useGridEventHandlers = (props: GridEventHandlersProps) => {
     }
   }, [width, height, zoom, onFastClick])
 
+  // MOUSE
   const handleMouseDown = useCallback(
     (e: React.MouseEvent) => {
       if (e.button === 0) {
@@ -137,14 +135,6 @@ export const useGridEventHandlers = (props: GridEventHandlersProps) => {
     },
     [handleStartHolding, x, y],
   )
-
-  const handleTouchStart = useCallback(
-    (e: React.TouchEvent) => {
-      handleStartHolding({ x: e.touches[0].clientX - x.get(), y: e.touches[0].clientY - y.get() })
-    },
-    [handleStartHolding, x, y],
-  )
-
   const handleMouseMove = useCallback(
     (e: React.MouseEvent) => {
       e.preventDefault()
@@ -155,7 +145,17 @@ export const useGridEventHandlers = (props: GridEventHandlersProps) => {
     },
     [handleMoving],
   )
+  const handleMouseUp = useCallback(() => {
+    handleEndHolding()
+  }, [handleEndHolding])
 
+  // TOUCH
+  const handleTouchStart = useCallback(
+    (e: React.TouchEvent) => {
+      handleStartHolding({ x: e.touches[0].clientX - x.get(), y: e.touches[0].clientY - y.get() })
+    },
+    [handleStartHolding, x, y],
+  )
   const handleTouchMove = useCallback(
     (e: React.TouchEvent) => {
       handleMoving(
@@ -168,45 +168,60 @@ export const useGridEventHandlers = (props: GridEventHandlersProps) => {
     },
     [handleMoving],
   )
-
-  const handleMouseUp = useCallback(() => {
-    handleEndHolding()
-  }, [handleEndHolding])
-
   const handleTouchEnd = useCallback(() => {
     handleEndHolding()
   }, [handleEndHolding])
 
+  // KEYBOARD
   const handleKeyDown = useCallback(
     (e: React.KeyboardEvent) => {
       if (e.key === 'ArrowUp') {
         e.preventDefault()
-        movePan({ y: 10 })
+        movePan({ y: panStep })
       } else if (e.key === 'ArrowDown') {
         e.preventDefault()
-        movePan({ y: -10 })
+        movePan({ y: -panStep })
       } else if (e.key === 'ArrowLeft') {
         e.preventDefault()
-        movePan({ x: 10 })
+        movePan({ x: panStep })
       } else if (e.key === 'ArrowRight') {
         e.preventDefault()
-        movePan({ x: -10 })
+        movePan({ x: -panStep })
       }
     },
-    [movePan],
+    [movePan, panStep],
   )
 
-  return {
-    onWheel: config.disabled ? undefined : handleWheel,
-    onMouseDown: config.disabled ? undefined : handleMouseDown,
-    onMouseMove: config.disabled ? undefined : handleMouseMove,
-    onMouseUp: config.disabled ? undefined : handleMouseUp,
-    onMouseLeave: config.disabled ? undefined : handleMouseUp,
-    onKeyDown: config.disabled ? undefined : handleKeyDown,
-    onTouchStart: config.disabled ? undefined : handleTouchStart,
-    onTouchMove: config.disabled ? undefined : handleTouchMove,
-    onTouchEnd: config.disabled ? undefined : handleTouchEnd,
-    onTouchCancel: config.disabled ? undefined : handleTouchEnd,
-    handleZoom: config.disabled ? undefined : handleZoom,
-  }
+  const memoizedEventHandlers = useMemo(
+    () => ({
+      onWheel: config.disabled || config.wheelDisabled ? undefined : handleWheel,
+      onMouseDown: config.disabled || config.panDisabled ? undefined : handleMouseDown,
+      onMouseMove: config.disabled || config.panDisabled ? undefined : handleMouseMove,
+      onMouseUp: config.disabled || config.panDisabled ? undefined : handleMouseUp,
+      onMouseLeave: config.disabled || config.panDisabled ? undefined : handleMouseUp,
+      onKeyDown: config.disabled || config.keyDisabled ? undefined : handleKeyDown,
+      onTouchStart: config.disabled || config.panDisabled ? undefined : handleTouchStart,
+      onTouchMove: config.disabled || config.panDisabled ? undefined : handleTouchMove,
+      onTouchEnd: config.disabled || config.panDisabled ? undefined : handleTouchEnd,
+      onTouchCancel: config.disabled || config.panDisabled ? undefined : handleTouchEnd,
+      handleZoom: config.disabled || config.wheelDisabled ? undefined : handleZoom,
+    }),
+    [
+      config.disabled,
+      config.wheelDisabled,
+      config.panDisabled,
+      config.keyDisabled,
+      handleWheel,
+      handleMouseDown,
+      handleMouseMove,
+      handleMouseUp,
+      handleKeyDown,
+      handleTouchStart,
+      handleTouchMove,
+      handleTouchEnd,
+      handleZoom,
+    ],
+  )
+
+  return memoizedEventHandlers
 }
