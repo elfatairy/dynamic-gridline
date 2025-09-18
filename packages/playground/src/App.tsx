@@ -26,6 +26,7 @@ function App() {
             gridBackground: '#191516',
             minZoom: 0.01,
             maxZoom: 10,
+            zoomSteps: 3,
           }}
         >
           <GridItem x={0} y={0}>

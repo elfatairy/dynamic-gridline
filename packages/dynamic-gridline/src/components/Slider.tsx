@@ -7,16 +7,20 @@ export interface SliderProps {
   maxZoom: number
   zoomValue: number
   handleZoom: (value: number) => void
+  zoomSteps: number
 }
 
-export const Slider = ({ minZoom, maxZoom, zoomValue, handleZoom }: SliderProps) => {
+export const Slider = ({ minZoom, maxZoom, zoomValue, handleZoom, zoomSteps }: SliderProps) => {
+  const min = Math.log10(minZoom)
+  const max = Math.log10(maxZoom)
+  const step = (max - min) / (zoomSteps - 1)
   return (
     <div className={styles.zoomControls}>
       <SliderPrimitive
-        min={Math.log10(minZoom)}
-        max={Math.log10(maxZoom)}
+        min={min}
+        max={max}
         value={[Math.log10(zoomValue)]}
-        step={0.1}
+        step={step}
         onValueChange={(values) => handleZoom(10 ** values[0])}
         className={styles.zoomSlider}
         aria-label="Zoom level slider"

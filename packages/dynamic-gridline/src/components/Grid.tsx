@@ -50,8 +50,9 @@ export function Grid({ children = null, ref = undefined, config: configProps }: 
       maxZoom: config.maxZoom,
       zoomValue: zoomDisplayValue,
       handleZoom: handleZoom,
+      zoomSteps: config.zoomSteps,
     }),
-    [config.minZoom, config.maxZoom, zoomDisplayValue, handleZoom],
+    [config.minZoom, config.maxZoom, config.zoomSteps, zoomDisplayValue, handleZoom],
   )
 
   return (

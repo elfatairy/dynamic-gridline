@@ -10,6 +10,7 @@ export type GridConfig = {
 
   minZoom: number
   maxZoom: number
+  zoomSteps: number
   panStep: number
 
   disabled: boolean
@@ -31,6 +32,7 @@ export const DEFAULT_GRID_CONFIG: GridConfig = {
   gridColor: 'oklch(70.7% 0.022 261.325)',
   minZoom: 0.1,
   maxZoom: 1,
+  zoomSteps: 10,
   panStep: 10,
   disabled: false,
   panDisabled: false,
