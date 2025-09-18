@@ -23,6 +23,12 @@ function App() {
                 <button onClick={() => handleZoom(zoomValue - 0.1)}>Zoom out</button>
               </div>
             ),
+            onHoldClick: ({ x, y }) => {
+              console.log('onHoldClick', x, y)
+            },
+            onFastClick: ({ x, y }) => {
+              console.log('onFastClick', x, y)
+            },
           }}
         >
           <GridItem x={0} y={0}>

@@ -1,4 +1,4 @@
-import { useCallback, useMemo, useRef, useState } from 'react'
+import { useCallback, useMemo, useRef } from 'react'
 import { getElementSize, throttle } from '../utils/utils'
 import { GridConfig } from '~/configs/gridConfig'
 import { THROTTLE_TIME } from '~/constants/grid'
@@ -21,11 +21,10 @@ export const useGridEventHandlers = (props: GridEventHandlersProps) => {
   const { config, containerRef, zoom, width, height, x, y, setZoomDisplayValue } = props
   const { minZoom, maxZoom, onHoldClick, onFastClick, onMouseMove } = config
 
-  const isHoldingRef = useRef(false)
-  const [isHolding, setIsHolding] = useState(false)
-  const [dragStart, setDragStart] = useState({ x: 0, y: 0 })
-  const holdingTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null)
+  const isHolding = useRef(false)
+  const dragStart = useRef({ x: 0, y: 0 })
   const fastClickTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null)
+  const holdingTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null)
 
   const { setPan, movePan } = usePan({ containerRef, x, y, width, height, zoom })
   const { setZoom } = useZoom({
@@ -40,6 +39,7 @@ export const useGridEventHandlers = (props: GridEventHandlersProps) => {
     setZoomDisplayValue,
   })
 
+  // ZOOM
   const handleZoom = useCallback(
     (newZoom: number) => {
       newZoom = Math.max(minZoom, Math.min(maxZoom, Number(newZoom.toFixed(2))))
@@ -47,62 +47,52 @@ export const useGridEventHandlers = (props: GridEventHandlersProps) => {
     },
     [minZoom, maxZoom, setZoom],
   )
-
-  // Mouse wheel zoom
   const handleWheel = useMemo(
     () =>
       throttle((e: React.WheelEvent) => {
-        const rect = containerRef.current?.getBoundingClientRect()
-        if (!rect) {
-          return
-        }
-
         const delta = e.deltaY > 0 ? 0.9 : 1.1
-
         handleZoom(delta * zoom.get())
       }, THROTTLE_TIME),
     [handleZoom, zoom],
   )
 
+  // HOLDING
+  const handleHoldClick = useCallback(
+    (position: { x: number; y: number }) => {
+      holdingTimeoutRef.current = setTimeout(() => {
+        if (!isHolding.current) return
+        onHoldClick(position)
+      }, 300)
+    },
+    [onHoldClick],
+  )
+  const handleFastClick = useCallback(() => {
+    fastClickTimeoutRef.current = setTimeout(() => {
+      fastClickTimeoutRef.current = null
+    }, 100)
+  }, [])
+
   const handleStartHolding = useCallback(
     (position: { x: number; y: number }) => {
-      setIsHolding(true)
-      isHoldingRef.current = true
-      setDragStart(position)
+      isHolding.current = true
+      dragStart.current = position
+      const pos = {
+        x: position.x - (width * zoom.get()) / 2,
+        y: position.y - (height * zoom.get()) / 2,
+      }
       if (onHoldClick) {
-        holdingTimeoutRef.current = setTimeout(() => {
-          if (!isHoldingRef.current) {
-            return
-          }
-
-          const pos = {
-            x: position.x / zoom.get() - width / 2,
-            y: position.y / zoom.get() - height / 2,
-          }
-          onHoldClick({
-            x: pos.x,
-            y: pos.y,
-          })
-        }, 300)
+        handleHoldClick(pos)
       }
       if (onFastClick) {
-        fastClickTimeoutRef.current = setTimeout(() => {
-          if (!isHoldingRef.current) {
-            return
-          }
-          onFastClick({
-            x: position.x - (width * zoom.get()) / 2,
-            y: position.y - (height * zoom.get()) / 2,
-          })
-        }, 100)
+        handleFastClick()
       }
     },
-    [onHoldClick, onFastClick, width, zoom, height],
+    [onHoldClick, onFastClick, width, zoom, height, handleHoldClick, handleFastClick],
   )
 
   const handleMoving = useCallback(
     (position: { x: number; y: number }, isTouch: boolean = false) => {
-      if (isHolding) {
+      if (isHolding.current) {
         if (holdingTimeoutRef.current) {
           clearTimeout(holdingTimeoutRef.current)
         }
@@ -110,8 +100,8 @@ export const useGridEventHandlers = (props: GridEventHandlersProps) => {
           clearTimeout(fastClickTimeoutRef.current)
         }
         setPan({
-          x: position.x - dragStart.x,
-          y: position.y - dragStart.y,
+          x: position.x - dragStart.current.x,
+          y: position.y - dragStart.current.y,
         })
       }
       const viewPort = getElementSize(containerRef.current)
@@ -122,19 +112,22 @@ export const useGridEventHandlers = (props: GridEventHandlersProps) => {
         })
       }
     },
-    [isHolding, containerRef, onMouseMove, setPan, dragStart.x, dragStart.y, zoom],
+    [containerRef, onMouseMove, setPan, zoom],
   )
 
   const handleEndHolding = useCallback(() => {
-    setIsHolding(false)
-    isHoldingRef.current = false
+    isHolding.current = false
     if (fastClickTimeoutRef.current) {
-      clearTimeout(fastClickTimeoutRef.current)
+      fastClickTimeoutRef.current = null
+      onFastClick({
+        x: dragStart.current.x - (width * zoom.get()) / 2,
+        y: dragStart.current.y - (height * zoom.get()) / 2,
+      })
     }
     if (holdingTimeoutRef.current) {
       clearTimeout(holdingTimeoutRef.current)
     }
-  }, [])
+  }, [width, height, zoom, onFastClick])
 
   const handleMouseDown = useCallback(
     (e: React.MouseEvent) => {

@@ -27,7 +27,7 @@ export function Grid({ children = null, ref = undefined, config: configProps }: 
     containerRef,
     config,
   )
-  const eventHandlers = useGridEventHandlers({
+  const { handleZoom, ...eventHandlers } = useGridEventHandlers({
     config,
     containerRef,
     zoom,
@@ -49,9 +49,9 @@ export function Grid({ children = null, ref = undefined, config: configProps }: 
       minZoom: config.minZoom,
       maxZoom: config.maxZoom,
       zoomValue: zoomDisplayValue,
-      handleZoom: eventHandlers.handleZoom,
+      handleZoom: handleZoom,
     }),
-    [config.minZoom, config.maxZoom, zoomDisplayValue, eventHandlers.handleZoom],
+    [config.minZoom, config.maxZoom, zoomDisplayValue, handleZoom],
   )
 
   return (
