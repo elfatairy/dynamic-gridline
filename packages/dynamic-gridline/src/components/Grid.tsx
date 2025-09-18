@@ -55,7 +55,13 @@ export function Grid({ children = null, ref = undefined, config: configProps }: 
   )
 
   return (
-    <div className={styles.gridContainer} ref={containerRef}>
+    <div
+      className={styles.gridContainer}
+      ref={containerRef}
+      style={{
+        backgroundColor: config.gridBackground,
+      }}
+    >
       <motion.div
         style={{
           cursor: config.disabled ? 'auto' : 'grab',
@@ -70,7 +76,7 @@ export function Grid({ children = null, ref = undefined, config: configProps }: 
         {...eventHandlers}
       >
         <svg className={styles.gridSvg}>
-          <Gridlines width={config.width} zoom={zoom} gridCellSize={config.gridCellSize} />
+          <Gridlines width={config.width} zoom={zoom} gridCellSize={config.gridCellSize} gridColor={config.gridColor} />
         </svg>
 
         {children && (

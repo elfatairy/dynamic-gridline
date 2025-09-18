@@ -1,4 +1,4 @@
-import { useLayoutEffect, useRef, useState, useDeferredValue } from 'react'
+import { useLayoutEffect, useState, useDeferredValue } from 'react'
 import { useMotionValue, useTransform } from 'motion/react'
 import { GridConfig } from '~/configs/gridConfig'
 import { usePan } from './usePan'

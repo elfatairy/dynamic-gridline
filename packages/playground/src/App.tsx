@@ -14,25 +14,25 @@ function App() {
       <div style={{ width: '500px', height: '500px', border: '2px solid black' }}>
         <Grid
           config={{
-            width: 1000,
-            height: 800,
-            customZoomSlider: ({ zoomValue, handleZoom }) => (
-              <div style={{ position: 'absolute', top: 0, right: 0 }}>
-                <button onClick={() => handleZoom(zoomValue + 0.1)}>Zoom in</button>
-                {zoomValue}
-                <button onClick={() => handleZoom(zoomValue - 0.1)}>Zoom out</button>
-              </div>
-            ),
+            width: 100000,
+            height: 80000,
             onHoldClick: ({ x, y }) => {
               console.log('onHoldClick', x, y)
             },
             onFastClick: ({ x, y }) => {
               console.log('onFastClick', x, y)
             },
+            gridColor: '#C9DAEA',
+            gridBackground: '#191516',
+            minZoom: 0.01,
+            maxZoom: 10,
           }}
         >
           <GridItem x={0} y={0}>
             <div style={{ width: 100, height: 100, backgroundColor: 'red' }} />
+          </GridItem>
+          <GridItem x={200} y={0} disableScale>
+            <div style={{ width: 100, height: 100, backgroundColor: 'blue', borderRadius: '50%' }} />
           </GridItem>
         </Grid>
       </div>

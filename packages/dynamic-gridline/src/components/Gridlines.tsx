@@ -3,15 +3,19 @@ import { GridPattern } from './GridPattern'
 import { MotionValue } from 'motion/react'
 import { useMemo } from 'react'
 
+interface GridlinesProps {
+  width: number
+  zoom: MotionValue<number>
+  gridCellSize: number
+  gridColor: string
+}
+
 export function Gridlines({
   width,
   zoom,
   gridCellSize,
-}: {
-  width: number
-  zoom: MotionValue<number>
-  gridCellSize: number
-}) {
+  gridColor,
+}: GridlinesProps) {
   const gridLevels = useMemo(
     () => Math.ceil(Math.log10(width / gridCellSize)),
     [width, gridCellSize],
@@ -23,7 +27,7 @@ export function Gridlines({
         {Array.from({ length: gridLevels }).map((_, index) => {
           return (
             <Fragment key={index}>
-              <GridPattern zoom={zoom} cellSize={gridCellSize} index={index} />
+              <GridPattern zoom={zoom} cellSize={gridCellSize} index={index} gridColor={gridColor} />
             </Fragment>
           )
         })}

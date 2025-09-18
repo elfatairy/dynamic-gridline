@@ -5,6 +5,9 @@ export type GridConfig = {
   height: number
   gridCellSize: number
 
+  gridBackground: string
+  gridColor: string
+
   minZoom: number
   maxZoom: number
   panStep: number
@@ -24,6 +27,8 @@ export const DEFAULT_GRID_CONFIG: GridConfig = {
   width: window.innerWidth * 10,
   height: window.innerHeight * 10,
   gridCellSize: 20,
+  gridBackground: 'transparent',
+  gridColor: 'oklch(70.7% 0.022 261.325)',
   minZoom: 0.1,
   maxZoom: 1,
   panStep: 10,

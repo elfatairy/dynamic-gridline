@@ -42,7 +42,7 @@ export const useGridEventHandlers = (props: GridEventHandlersProps) => {
   // ZOOM
   const handleZoom = useCallback(
     (newZoom: number) => {
-      newZoom = Math.max(minZoom, Math.min(maxZoom, Number(newZoom.toFixed(2))))
+      newZoom = Math.max(minZoom, Math.min(maxZoom, Number(newZoom.toFixed(6))))
       setZoom(newZoom)
     },
     [minZoom, maxZoom, setZoom],
