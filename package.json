@@ -1,5 +1,6 @@
 {
   "name": "dynamic-gridline-monorepo",
+  "description": "A draggable and zoomable grid system for placing items.",
   "private": false,
   "scripts": {
     "build": "cd packages/dynamic-gridline && pnpm build",
