@@ -10,7 +10,7 @@
 <br />
 <div align="center">
   <a href="https://github.com/elfatairy/dynamic-gridline">
-    <img src="https://github.com/elfatairy/dynamic-gridline/blob/main/images/logo.png" alt="Logo" width="80" height="80">
+    <img src="https://github.com/elfatairy/dynamic-gridline/blob/main/media/logo.png" alt="Logo" width="80" height="80">
   </a>
 
 <h3 align="center">Dynamic Gridline</h3>
@@ -55,7 +55,7 @@
 
 ## About The Project
 
-[![Product Name Screen Shot][product-screenshot]](/media/demo.mp4)
+[Demo](https://github.com/elfatairy/dynamic-gridline/blob/main/media/demo.mp4)
 
 ### Built With
 
@@ -160,7 +160,6 @@ Portfolio: [https://omarhassan.net](https://omarhassan.net)
 [license-url]: https://github.com/elfatairy/dynamic-gridline/blob/main/LICENSE
 [linkedin-shield]: https://img.shields.io/badge/-LinkedIn-black.svg?style=for-the-badge&logo=linkedin&colorB=555
 [linkedin-url]: https://www.linkedin.com/in/omar-hassan-81888320b/
-[product-screenshot]: images/screenshot.png
 [Next.js]: https://img.shields.io/badge/next.js-000000?style=for-the-badge&logo=nextdotjs&logoColor=white
 [Next-url]: https://nextjs.org/
 [React.js]: https://img.shields.io/badge/React-20232A?style=for-the-badge&logo=react&logoColor=61DAFB
