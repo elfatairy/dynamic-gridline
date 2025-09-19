@@ -55,7 +55,7 @@
 
 ## About The Project
 
-[Demo](https://github.com/elfatairy/dynamic-gridline/blob/main/media/demo.mp4)
+<video src="https://github.com/elfatairy/dynamic-gridline/blob/main/media/demo.mp4" width="500" type="video/mp4">
 
 ### Built With
 
