@@ -122,12 +122,7 @@ function App() {
 }
 ```
 
-<<<<<<< HEAD
-
-=======
-
-> > > > > > > 06a5714f86ea60bc29b051c271a30df45f763db7
-> > > > > > > <img width="1920" height="1080" alt="Screenshot 2025-09-21 011243" src="https://github.com/user-attachments/assets/7c440a6d-6401-4828-b8d1-40a250aa606c" />
+<img width="1920" height="1080" alt="Screenshot 2025-09-21 011243" src="https://github.com/user-attachments/assets/7c440a6d-6401-4828-b8d1-40a250aa606c" />
 
 ### Core Components
 
@@ -228,10 +223,6 @@ function ScalingDemo() {
   <img width="400" alt="Screenshot 2025-09-21 011732" src="https://github.com/user-attachments/assets/0bd6394f-ffcd-4602-9a02-c01cfea86b6b" />
   <img width="400" alt="Screenshot 2025-09-21 013624" src="https://github.com/user-attachments/assets/a9695148-d06d-4808-a071-f925a334d46e" />
 </div>
-
-# <<<<<<< HEAD
-
-> > > > > > > 06a5714f86ea60bc29b051c271a30df45f763db7
 
 #### Fixed Z-Index Control
 
@@ -341,10 +332,6 @@ function MouseTracking() {
 ```
 
 ![Untitled video - Made with Clipchamp](https://github.com/user-attachments/assets/62e5c70a-91a4-43e5-9c61-ed2c4f57e713)
-
-# <<<<<<< HEAD
-
-> > > > > > > 06a5714f86ea60bc29b051c271a30df45f763db7
 
 ### Navigation Controls
 
@@ -463,10 +450,6 @@ function CustomZoomSlider() {
 
 <img width="1920" height="1080" alt="Screenshot 2025-09-21 012823" src="https://github.com/user-attachments/assets/34702c8d-6b97-424b-97d4-13ae784e41d9" />
 
-# <<<<<<< HEAD
-
-> > > > > > > 06a5714f86ea60bc29b051c271a30df45f763db7
-
 ### Disabling Features
 
 #### Selective Feature Disabling
@@ -515,10 +498,6 @@ function SelectiveDisabling() {
 ```
 
 <img width="1920" height="1080" alt="Screenshot 2025-09-21 013157" src="https://github.com/user-attachments/assets/a507e7b8-59f2-4c86-bae3-d7880369c38d" />
-
-# <<<<<<< HEAD
-
-> > > > > > > 06a5714f86ea60bc29b051c271a30df45f763db7
 
 ### Grid Reference and Imperative Controls
 
