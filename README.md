@@ -35,7 +35,6 @@
         <li><a href="#built-with">Built With</a></li>
       </ul>
     </li>
-    <li><a href="#usage">Usage</a></li>
     <li>
       <a href="#getting-started">Getting Started</a>
       <ul>
@@ -43,6 +42,7 @@
         <li><a href="#installation">Installation</a></li>
       </ul>
     </li>
+    <li><a href="#usage">Usage</a></li>
     <li><a href="#roadmap">Roadmap</a></li>
     <li><a href="#contributing">Contributing</a></li>
     <li><a href="#license">License</a></li>
@@ -55,22 +55,12 @@
 
 ## About The Project
 
-<div align="center">
-  <video src="https://github.com/elfatairy/dynamic-gridline/blob/main/media/demo.mp4" width="500">
-</div>
+[![Demo Dynamic Gridline](https://github.com/user-attachments/assets/a7e65877-970a-4362-b39e-1ccb2105e0ba)](https://github.com/user-attachments/assets/a7e65877-970a-4362-b39e-1ccb2105e0ba)
 
 ### Built With
 
 - [![React][React.js]][React-url]
 - [![Motion][Motion.dev]][Motion-url]
-
-<!-- USAGE EXAMPLES -->
-
-## Usage
-
-Use this space to show useful examples of how a project can be used. Additional screenshots, code examples and demos work well in this space. You may also link to more resources.
-
-_For more examples, please refer to the [Documentation](https://example.com)_
 
 <!-- GETTING STARTED -->
 
@@ -107,6 +97,469 @@ pnpm add dynamic-gridline
 # bun
 bun install dynamic-gridline
 ```
+
+<!-- USAGE EXAMPLES -->
+
+## Usage
+
+### Basic Setup
+
+Import the components and start building your interactive grid:
+
+```tsx
+import { Grid, GridItem } from 'dynamic-gridline'
+
+function App() {
+  return (
+    <div style={{ width: '100vw', height: '100vh' }}>
+      <Grid>
+        <GridItem x={100} y={100}>
+          <div>Your content here</div>
+        </GridItem>
+      </Grid>
+    </div>
+  )
+}
+```
+
+<img width="1920" height="1080" alt="Screenshot 2025-09-21 011243" src="https://github.com/user-attachments/assets/7c440a6d-6401-4828-b8d1-40a250aa606c" />
+
+### Core Components
+
+#### Grid Component
+
+The `Grid` component is the main container that provides the interactive canvas with pan, zoom, and grid functionality.
+
+```tsx
+import { Grid } from 'dynamic-gridline'
+
+function InteractiveCanvas() {
+  return (
+    <Grid
+      config={{
+        width: 10000,
+        height: 8000,
+        gridCellSize: 50,
+        minZoom: 0.1,
+        maxZoom: 2,
+        gridColor: '#e0e0e0',
+      }}
+    >
+      {/* Your grid items go here */}
+    </Grid>
+  )
+}
+```
+
+<img width="1920" height="1080" alt="Screenshot 2025-09-21 011342" src="https://github.com/user-attachments/assets/1c5bdc5f-b2f2-4bd9-af18-7e7afea682a3" />
+
+#### GridItem Component
+
+The `GridItem` component positions content within the grid coordinate system.
+
+```tsx
+import { Grid, GridItem } from 'dynamic-gridline'
+
+function ItemPlacement() {
+  return (
+    <Grid>
+      <GridItem x={0} y={0}>
+        <div style={{ background: 'red', text: 'white', padding: '10px' }}>(0,0)</div>
+      </GridItem>
+      <GridItem x={200} y={150}>
+        <div style={{ background: 'blue', text: 'white', padding: '10px' }}>(200,150)</div>
+      </GridItem>
+      <GridItem x={-150} y={-50}>
+        <div style={{ background: 'green', text: 'white', padding: '10px' }}>(-150, -50)</div>
+      </GridItem>
+    </Grid>
+  )
+}
+```
+
+<img width="1920" height="1080" alt="Screenshot 2025-09-21 011534" src="https://github.com/user-attachments/assets/2d206814-56b2-4817-bdf2-8bf44e095c7c" />
+
+### Advanced Features
+
+#### Disable Scale for Grid Items
+
+Control whether items scale with zoom using the `disableScale` property:
+
+```tsx
+function ScalingDemo() {
+  return (
+    <Grid config={{ minZoom: 0.5, maxZoom: 2 }}>
+      {/* This circle will scale with zoom */}
+      <GridItem x={-100} y={0} disableScale={false}>
+        <div
+          style={{
+            width: 120,
+            height: 120,
+            color: 'white',
+            borderRadius: '50%',
+            background: 'blue',
+          }}
+        ></div>
+      </GridItem>
+
+      {/* This circle maintains constant size */}
+      <GridItem x={100} y={0} disableScale={true}>
+        <div
+          style={{
+            width: 120,
+            height: 120,
+            color: 'white',
+            borderRadius: '50%',
+            background: 'red',
+          }}
+        ></div>
+      </GridItem>
+    </Grid>
+  )
+}
+```
+
+<div align="center" style="display: flex; flex-direction: row;">
+  <img width="400" alt="Screenshot 2025-09-21 011732" src="https://github.com/user-attachments/assets/0bd6394f-ffcd-4602-9a02-c01cfea86b6b" />
+  <img width="400" alt="Screenshot 2025-09-21 013624" src="https://github.com/user-attachments/assets/a9695148-d06d-4808-a071-f925a334d46e" />
+</div>
+
+#### Fixed Z-Index Control
+
+Control layering of grid items with `fixedZIndex`:
+
+```tsx
+function LayeringDemo() {
+  return (
+    <Grid>
+      <GridItem x={-50} y={-50} fixedZIndex={1}>
+        <div
+          style={{
+            width: 100,
+            height: 100,
+            background: 'rgba(255,0,0,0.7)',
+            color: 'white',
+          }}
+        >
+          Behind (z-index: 1)
+        </div>
+      </GridItem>
+
+      <GridItem x={0} y={0} fixedZIndex={10}>
+        <div
+          style={{
+            width: 100,
+            height: 100,
+            background: 'rgba(0,0,255,0.7)',
+            color: 'white',
+          }}
+        >
+          In Front (z-index: 10)
+        </div>
+      </GridItem>
+    </Grid>
+  )
+}
+```
+
+<img width="1920" height="1080" alt="Screenshot 2025-09-21 011845" src="https://github.com/user-attachments/assets/543c2fb0-2b67-4496-a915-2469a9fa0c53" />
+
+### Interaction Features
+
+#### Click Event Handlers
+
+Handle fast clicks and hold clicks on the grid:
+
+```tsx
+function ClickHandling() {
+  const handleFastClick = ({ x, y }: { x: number; y: number }) => {
+    console.log('Fast click at:', x, y)
+    // Add logic for quick interactions
+  }
+
+  const handleHoldClick = ({ x, y }: { x: number; y: number }) => {
+    console.log('Hold click at:', x, y)
+    // Add logic for context menus or long-press actions
+  }
+
+  return (
+    <Grid
+      config={{
+        onFastClick: handleFastClick,
+        onHoldClick: handleHoldClick,
+      }}
+    >
+      <GridItem x={0} y={0}>
+        <div>Try clicking and holding on the grid!</div>
+      </GridItem>
+    </Grid>
+  )
+}
+```
+
+#### Mouse Movement Tracking
+
+Track mouse position within the grid coordinate system:
+
+```tsx
+function MouseTracking() {
+  const [mousePos, setMousePos] = useState({ x: 0, y: 0 })
+
+  const handleMouseMove = ({ x, y }: { x: number; y: number }) => {
+    setMousePos({ x, y })
+  }
+
+  return (
+    <div style={{ width: '100vw', height: '100vh' }}>
+      <p style={{ position: 'absolute', top: 0, left: 0 }}>
+        Mouse position: ({mousePos.x.toFixed(2)}, {mousePos.y.toFixed(2)})
+      </p>
+      <Grid config={{ onMouseMove: handleMouseMove }}>
+        <GridItem x={mousePos.x} y={mousePos.y}>
+          <div
+            style={{
+              width: 10,
+              height: 10,
+              background: 'red',
+              borderRadius: '50%',
+            }}
+          />
+        </GridItem>
+      </Grid>
+    </div>
+  )
+}
+```
+
+![Untitled video - Made with Clipchamp](https://github.com/user-attachments/assets/62e5c70a-91a4-43e5-9c61-ed2c4f57e713)
+
+### Navigation Controls
+
+#### Keyboard Navigation
+
+Navigate the grid using arrow keys:
+
+```tsx
+function KeyboardNavigation() {
+  return (
+    <Grid
+      config={{
+        panStep: 50, // Pixels to move per arrow key press
+        keyDisabled: false, // Enable keyboard controls
+      }}
+    >
+      <GridItem x={0} y={0}>
+        <div>Use arrow keys to pan around!</div>
+      </GridItem>
+    </Grid>
+  )
+}
+```
+
+#### Zoom Controls
+
+Built-in zoom slider and wheel zoom functionality:
+
+```tsx
+function ZoomDemo() {
+  return (
+    <Grid
+      config={{
+        minZoom: 0.25,
+        maxZoom: 4,
+        zoomSteps: 50,
+        wheelDisabled: false, // Enable mouse wheel zoom
+      }}
+    >
+      <GridItem x={0} y={0}>
+        <div>Use mouse wheel or slider to zoom!</div>
+      </GridItem>
+    </Grid>
+  )
+}
+```
+
+### Customization Options
+
+#### Custom Grid Appearance
+
+Customize the grid's visual appearance:
+
+```tsx
+function CustomStyling() {
+  return (
+    <Grid
+      config={{
+        gridBackground: '#1b2845',
+        gridColor: '#4f88cb', // Custom grid line color
+        gridCellSize: 30, // Smaller grid cells
+      }}
+    >
+      <GridItem x={0} y={0}>
+        <div style={{ color: 'white' }}>Custom styled grid!</div>
+      </GridItem>
+    </Grid>
+  )
+}
+```
+
+<img width="1920" height="1080" alt="Screenshot 2025-09-21 012631" src="https://github.com/user-attachments/assets/91315249-e725-4612-a683-d272fef9e793" />
+
+#### Custom Zoom Slider
+
+Replace the default zoom slider with your own component:
+
+```tsx
+function CustomZoomSlider() {
+  const customSlider = (sliderProps: SliderProps) => (
+    <div
+      style={{
+        position: 'absolute',
+        top: 20,
+        right: 20,
+        background: 'white',
+        padding: '10px',
+        borderRadius: '8px',
+        boxShadow: '0 2px 10px rgba(0,0,0,0.1)',
+      }}
+    >
+      <label>Zoom: {sliderProps.zoomValue.toFixed(2)}x</label>
+      <input
+        type="range"
+        min={Math.log10(sliderProps.minZoom)}
+        max={Math.log10(sliderProps.maxZoom)}
+        step={
+          (Math.log10(sliderProps.maxZoom) - Math.log10(sliderProps.minZoom)) /
+          (sliderProps.zoomSteps - 1)
+        }
+        value={Math.log10(sliderProps.zoomValue)}
+        onChange={(e) => sliderProps.handleZoom(10 ** parseFloat(e.target.value))}
+      />
+    </div>
+  )
+
+  return (
+    <Grid config={{ customZoomSlider: customSlider }}>
+      <GridItem x={0} y={0}>
+        <div>Custom zoom control!</div>
+      </GridItem>
+    </Grid>
+  )
+}
+```
+
+<img width="1920" height="1080" alt="Screenshot 2025-09-21 012823" src="https://github.com/user-attachments/assets/34702c8d-6b97-424b-97d4-13ae784e41d9" />
+
+### Disabling Features
+
+#### Selective Feature Disabling
+
+Disable specific interactions while keeping others active:
+
+```tsx
+function SelectiveDisabling() {
+  return (
+    <div
+      style={{
+        display: 'flex',
+        justifyContent: 'center',
+        alignItems: 'center',
+        width: '100vw',
+        height: '100vh',
+        gap: '20px',
+      }}
+    >
+      <div style={{ width: '30vw', aspectRatio: '1/1' }}>
+        <Grid config={{ panDisabled: true, wheelDisabled: false }}>
+          <GridItem x={0} y={0}>
+            <div>Zoom only</div>
+          </GridItem>
+        </Grid>
+      </div>
+      {/* Wheel zoom disabled, pan still works */}
+      <div style={{ width: '30vw', aspectRatio: '1/1' }}>
+        <Grid config={{ panDisabled: false, wheelDisabled: true }}>
+          <GridItem x={0} y={0}>
+            <div>Pan only</div>
+          </GridItem>
+        </Grid>
+      </div>
+      {/* Everything disabled */}
+      <div style={{ width: '30vw', aspectRatio: '1/1' }}>
+        <Grid config={{ disabled: true }}>
+          <GridItem x={0} y={0}>
+            <div>Static view</div>
+          </GridItem>
+        </Grid>
+      </div>
+    </div>
+  )
+}
+```
+
+<img width="1920" height="1080" alt="Screenshot 2025-09-21 013157" src="https://github.com/user-attachments/assets/a507e7b8-59f2-4c86-bae3-d7880369c38d" />
+
+### Grid Reference and Imperative Controls
+
+Access grid methods using a ref:
+
+```tsx
+import { useRef } from 'react'
+import { Grid, GridRef } from 'dynamic-gridline'
+
+function GridWithRef() {
+  const gridRef = useRef<GridRef>(null)
+
+  const focusGrid = () => {
+    gridRef.current?.focusGrid()
+  }
+
+  return (
+    <div>
+      <button onClick={focusGrid}>Focus Grid (for keyboard controls)</button>
+      <Grid ref={gridRef}>
+        <GridItem x={0} y={0}>
+          <div>Grid with ref access</div>
+        </GridItem>
+      </Grid>
+    </div>
+  )
+}
+```
+
+## Configuration Reference
+
+The `Grid` component accepts a `config` prop with the following options:
+
+| Property           | Type                                           | Default                        | Description                                    |
+| ------------------ | ---------------------------------------------- | ------------------------------ | ---------------------------------------------- |
+| `width`            | `number`                                       | `window.innerWidth * 10`       | Total width of the grid canvas in pixels       |
+| `height`           | `number`                                       | `window.innerHeight * 10`      | Total height of the grid canvas in pixels      |
+| `gridCellSize`     | `number`                                       | `20`                           | Size of each grid cell in pixels               |
+| `gridBackground`   | `string`                                       | `'transparent'`                | Background color of the grid container         |
+| `gridColor`        | `string`                                       | `'oklch(70.7% 0.022 261.325)'` | Color of the grid lines                        |
+| `minZoom`          | `number`                                       | `0.1`                          | Minimum zoom level (0.1 = 10%)                 |
+| `maxZoom`          | `number`                                       | `1`                            | Maximum zoom level (1 = 100%)                  |
+| `zoomSteps`        | `number`                                       | `100`                          | Number of steps in the zoom slider             |
+| `panStep`          | `number`                                       | `10`                           | Pixels to move when using keyboard navigation  |
+| `disabled`         | `boolean`                                      | `false`                        | Disable all interactions (pan, zoom, keyboard) |
+| `panDisabled`      | `boolean`                                      | `false`                        | Disable panning (mouse drag and touch)         |
+| `wheelDisabled`    | `boolean`                                      | `false`                        | Disable mouse wheel zooming                    |
+| `keyDisabled`      | `boolean`                                      | `false`                        | Disable keyboard navigation                    |
+| `customZoomSlider` | `((props: SliderProps) => ReactNode) \| null`  | `null`                         | Custom zoom slider component                   |
+| `onFastClick`      | `({ x, y }: { x: number; y: number }) => void` | `undefined`                    | Callback for quick clicks on the grid          |
+| `onHoldClick`      | `({ x, y }: { x: number; y: number }) => void` | `undefined`                    | Callback for long presses on the grid          |
+| `onMouseMove`      | `({ x, y }: { x: number; y: number }) => void` | `undefined`                    | Callback for mouse movement over the grid      |
+
+### GridItem Properties
+
+| Property       | Type        | Default     | Description                         |
+| -------------- | ----------- | ----------- | ----------------------------------- |
+| `x`            | `number`    | Required    | X coordinate in grid space          |
+| `y`            | `number`    | Required    | Y coordinate in grid space          |
+| `disableScale` | `boolean`   | `false`     | Prevent item from scaling with zoom |
+| `fixedZIndex`  | `number`    | `undefined` | Fixed z-index for layering control  |
+| `children`     | `ReactNode` | Required    | Content to render in the grid item  |
 
 <!-- CONTRIBUTING -->
 

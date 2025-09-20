@@ -1,51 +1,34 @@
 import { Grid, GridItem } from 'dynamic-gridline'
-import letterPositions from './data/letterPositions.json'
-
-const Dot = () => (
-  <div style={{
-    width: 100,
-    height: 100,
-    backgroundColor: '#1b2845',
-    borderRadius: '50%'
-  }} />
-)
 
 function App() {
-  const allPositions = [
-    ...Object.values(letterPositions.dynamic).flat(),
-    ...Object.values(letterPositions.gridline).flat()
-  ]
-
   return (
-    <div
-      style={{
-        width: '100vw',
-        height: '100vh',
-        display: 'flex',
-        justifyContent: 'center',
-        alignItems: 'center',
-      }}
-    >
-      <Grid
-        config={{
-          width: 100000,
-          height: 80000,
-          onHoldClick: ({ x, y }) => {
-            console.log('onHoldClick', x, y)
-          },
-          onFastClick: ({ x, y }) => {
-            console.log('onFastClick', x, y)
-          },
-          minZoom: 0.16,
-          maxZoom: 1,
-          zoomSteps: 100,
-        }}
-      >
-        {allPositions.map((position, index) => (
-          <GridItem key={index} x={position.x} y={position.y}>
-            <Dot />
-          </GridItem>
-        ))}
+    <div style={{ width: '100vw', height: '100vh' }}>
+      <Grid config={{ minZoom: 0.5, maxZoom: 2 }}>
+        {/* This circle will scale with zoom */}
+        <GridItem x={-100} y={0} disableScale={false}>
+          <div
+            style={{
+              width: 120,
+              height: 120,
+              color: 'white',
+              borderRadius: '50%',
+              background: 'blue',
+            }}
+          ></div>
+        </GridItem>
+
+        {/* This circle maintains constant size */}
+        <GridItem x={100} y={0} disableScale={true}>
+          <div
+            style={{
+              width: 120,
+              height: 120,
+              color: 'white',
+              borderRadius: '50%',
+              background: 'red',
+            }}
+          ></div>
+        </GridItem>
       </Grid>
     </div>
   )
