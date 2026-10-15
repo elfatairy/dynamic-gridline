@@ -3,7 +3,7 @@
   "description": "A draggable and zoomable grid system for placing items.",
   "private": false,
   "scripts": {
-    "build": "cd packages/dynamic-gridline && pnpm build",
+    "build": "node api.js && cd packages/dynamic-gridline && pnpm build",
     "link": "cd packages/dynamic-gridline && pnpm link",
     "playground": "cd packages/playground && pnpm dev"
   },
